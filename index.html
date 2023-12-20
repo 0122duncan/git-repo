@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Data</title>
+    <style>
+        /* 基本的頁面樣式設定 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #333;
+        }
+        #container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #air-quality {
+            font-size: 36px;
+            font-weight: bold;
+            color: #007BFF;
+        }
+        #update-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        #update-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>高雄市-左營區</h1>
+        <h1>空氣品質狀況</h1>
+        <p>目前空氣品質：<span id="air-quality">N/A</span> <span id="itemunit"> μg/m3</span></p>
+    </div>
+    <script>
+            const airQualityElement = document.getElementById("air-quality");
+            const itemUnitElement = document.getElementById("itemUnit");
+            const updateButton = document.getElementById("update-button");
+
+            // 函數用於獲取API數據並更新HTML頁面
+            function updateAirQuality() {
+                // 在這裡執行API請求，獲取最新的空氣品質數值
+                // 假設你有一個名為fetchAirQuality的API請求函數，並返回一個Promise
+                fetch("https://data.moenv.gov.tw/api/v2/aqx_p_242?language=zh&api_key=c756761f-b277-420c-9ae3-bd6a4389f225")
+                    .then(response => response.json())
+                    .then(data => {
+                        // 從API數據中提取空氣品質數值
+                        const airQualityValue = data.records[0].concentration;
+                        console.log(data);
+                        // 更新HTML頁面上的數值
+                        airQualityElement.textContent = airQualityValue;
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        console.error("無法獲取API數據：" + error);
+                    });
+            }
+
+            // 設定每隔5秒執行一次updateAirQuality函數
+            const updateInterval = 5000; // 毫秒
+            setInterval(updateAirQuality, updateInterval);
+            updateAirQuality();
+    </script>
+</body>
+</html>
